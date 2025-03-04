@@ -1,0 +1,9 @@
+// Struct ===>
+// create number of keys - array 1, 2, 3, 4
+// create threads for each philosopher
+
+
+// how to make sure that the order of thread creation goes in circles? 
+// if the philosopher that just woke up opens before the one that was waiting
+// create a stack/waitlist
+// 
