@@ -6,7 +6,7 @@
 #    By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/26 21:51:36 by zkhojazo          #+#    #+#              #
-#    Updated: 2025/02/27 12:21:58 by zkhojazo         ###   ########.fr        #
+#    Updated: 2025/03/08 20:58:40 by zkhojazo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,10 @@ OBJS_DIR = objs
 
 SRCS = main_philosophers.c \
 		ph_check_user_input.c \
-		ph_set_user_input.c
+		ph_queues.c \
+		ph_set_user_input.c \
+		ph_threads_1.c \
+		ph_threads_2.c
 
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 

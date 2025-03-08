@@ -6,7 +6,7 @@
 /*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 23:03:13 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/03/04 13:01:15 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/03/08 21:02:22 by zkhojazo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,10 @@ int	free_t_inputs(t_inputs *crit)
 		free(crit->forks);
 		crit->forks = NULL;
 	}
-	if (crit->fork_mx)
+	if (crit->is_muted)
 	{
-		free(crit->fork_mx);
-		crit->fork_mx = NULL;
+		free(crit->is_muted);
+		crit->is_muted = NULL;
 	}
 	if (crit->ph_pos)
 	{
@@ -84,26 +84,35 @@ int	ph_set_user_inputs_helper(t_inputs *crit)
 	int	i;
 
 	i = 0;
-	crit->forks = (pthread_mutex_t *)malloc(crit->num_p * sizeof(pthread_mutex_t));
+	crit->forks = (pthread_mutex_t *)malloc(crit->n_philos * sizeof(pthread_mutex_t));
 	if (!crit->forks)
 		return (0);
-	// ph_set_int_zero(&(crit->forks), crit->num_p);
-	// while (i < crit->num_p)
+	// ph_set_int_zero(&(crit->forks), crit->n_philos);
+	// while (i < crit->n_philos)
 	// 	*(crit->forks + i++) = 0;
-	crit->fork_mx = (int *)malloc(crit->num_p * sizeof(int));
+	crit->is_muted = (int *)malloc(crit->n_philos * sizeof(int));
 	crit->ph_pos = NULL;
 	crit->queue = NULL;
-	if (!crit->fork_mx)
+	if (!crit->is_muted)
 		return (free_t_inputs(crit), 0);
-	ph_set_int_zero(&crit->fork_mx, crit->num_p);
-	crit->ph_pos = (int *)malloc(crit->num_p * sizeof(int));
+	ph_set_int_zero(&crit->is_muted, crit->n_philos);
+	crit->ph_pos = (int *)malloc(crit->n_philos * sizeof(int));
 	if (!crit->ph_pos)
 		return (free_t_inputs(crit), 0);
-	ph_set_int_zero(&(crit->ph_pos), crit->num_p);
-	crit->queue = (int *)malloc(crit->num_p * sizeof(int));
+	ph_set_int_zero(&(crit->ph_pos), crit->n_philos);
+	crit->queue = (int **)malloc(crit->n_philos * sizeof(int *));
 	if (!crit->queue)
 		return (free_t_inputs(crit), 0);
-	ph_set_int_zero(&(crit->queue), crit->num_p);
+	while (i < crit->n_philos)
+	{
+		*(crit->queue + i) = (int *)malloc(2 * sizeof(int));
+		if (!*(crit->queue + i))
+			return (free_t_inputs(crit), 0); // if malloc fails free all the previous mallocs
+		ph_set_int_zero((crit->queue + i), 2);
+		i++;
+	}
+	ph_set_int_zero((crit->queue), crit->n_philos);
+	// double array of queues each with two nums
 	return (1);
 }
 
@@ -112,11 +121,12 @@ int	ph_set_user_inputs(t_inputs *crit, char **argv)
 	int	i;
 
 	i = 0;
-	crit->num_p = ph_atoi(*(argv + ++i));
+	crit->n_philos = ph_atoi(*(argv + ++i));
 	crit->ttd = ph_atoi(*(argv + ++i)) * 1000; // 1 micor second == 1000 millisocnd (for usleep)
 	crit->tte = ph_atoi(*(argv + ++i)) * 1000;
 	crit->tts = ph_atoi(*(argv + ++i)) * 1000;
 	crit->is_dead = 0;
+	crit->total_queue = 2;
 	if (*(argv + ++i))
 	{
 		crit->num_eat = ph_atoi(*(argv + i));

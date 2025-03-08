@@ -6,4 +6,11 @@
 // how to make sure that the order of thread creation goes in circles? 
 // if the philosopher that just woke up opens before the one that was waiting
 // create a stack/waitlist
+
+
+// two or more philosophers thread function
+// set the position of the philosopher - use mutex
+// try to mute forks when the philosopher is in queue (loop while pos = queue)
 // 
+
+
