@@ -6,7 +6,7 @@
 /*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:52:25 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/03/08 18:08:50 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/03/10 21:34:19 by zkhojazo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,19 @@ typedef struct s_inputs
 	// create keys
 	int		is_dead; // if one dies simulation stops
 	int		**queue;
+	struct timeval	time; // CAN CAUSE DATA RACE
+	struct timeval	init_time;
 }	t_inputs;
 
 typedef struct s_thread_vars
 {
-	struct timeval	time;
-	struct timeval	init_time;
-	struct timeval	prev_time;
+	// struct timeval	time;
+	// struct timeval	init_time;
+	struct timeval	time_thought;
+	struct timeval	time_ate;
+	struct timeval	time_woke_up;
+	struct timeval	current_time;
+	// int				ate;
 	int				left_fork_pos;
 	int				right_fork_pos;
 	int				pos;
