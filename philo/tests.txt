@@ -1,0 +1,9 @@
+// invalid arguments - TESTED
+valgrind -s --tool=helgrind ./philo 5 200 200 200 20 2
+valgrind -s --tool=helgrind ./philo 5 200 200 200
+
+
+
+// DEAD - TESTED
+valgrind -s --tool=helgrind ./philo 5 200 200 200
+

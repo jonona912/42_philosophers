@@ -6,7 +6,7 @@
 /*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 23:03:13 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/03/08 21:02:22 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:24:03 by zkhojazo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,9 @@ int	ph_set_user_inputs_helper(t_inputs *crit)
 
 	i = 0;
 	crit->forks = (pthread_mutex_t *)malloc(crit->n_philos * sizeof(pthread_mutex_t));
+	crit->forks_mute = (pthread_mutex_t *)malloc(crit->n_philos * sizeof(pthread_mutex_t)); // problem if fail, return error
 	if (!crit->forks)
 		return (0);
-	// ph_set_int_zero(&(crit->forks), crit->n_philos);
-	// while (i < crit->n_philos)
-	// 	*(crit->forks + i++) = 0;
 	crit->is_muted = (int *)malloc(crit->n_philos * sizeof(int));
 	crit->ph_pos = NULL;
 	crit->queue = NULL;
@@ -111,8 +109,6 @@ int	ph_set_user_inputs_helper(t_inputs *crit)
 		ph_set_int_zero((crit->queue + i), 2);
 		i++;
 	}
-	ph_set_int_zero((crit->queue), crit->n_philos);
-	// double array of queues each with two nums
 	return (1);
 }
 
