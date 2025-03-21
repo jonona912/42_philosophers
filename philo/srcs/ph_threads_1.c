@@ -6,11 +6,13 @@
 /*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 22:35:14 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/03/20 23:49:47 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/03/21 19:51:52 by zkhojazo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
+
+
 
 void	more_than_one_philo_cycles(t_inputs *phs, t_thread_vars *thread_vars)
 {
@@ -18,6 +20,7 @@ void	more_than_one_philo_cycles(t_inputs *phs, t_thread_vars *thread_vars)
 	{
 		if (philo_eat_loop(phs, thread_vars, phs->tte) == -1)
 			return ;
+		// printf("philo left eat loop %d\n", thread_vars->pos + 1);
 		ph_unlock_forks(phs, thread_vars);
 		ph_set_queue(phs, thread_vars->pos);
 		if (philo_sleep_loop(phs, thread_vars, phs->tts) == -1)
@@ -42,7 +45,7 @@ void	*more_than_one_philo(void *arg)
 	set_philosopher_position(phs, &thread_vars);
 	set_philosopher_forks(phs, &thread_vars);
 	gettimeofday(&thread_vars.time_ate, NULL);
-	gettimeofday(&thread_vars.prev_time, NULL);
+	gettimeofday(&thread_vars.prev_time, NULL); // THIS IS WHERE YOU LEFT OFF
 	if ((thread_vars.pos + 1) % 2 == 1)
 	{
 		ph_set_queue(phs, thread_vars.pos);

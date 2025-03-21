@@ -6,7 +6,7 @@
 /*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 23:09:03 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/03/20 21:35:07 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/03/21 18:46:05 by zkhojazo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ void set_is_muted(t_inputs *phs, int index, int value)
 int ph_lock_forks(t_inputs *phs, t_thread_vars *thread_vars)
 {
 	// ph_forks_mutex_change(phs, thread_vars, LOCK);
+	// printf("philo %d locking forks %d %d\n", thread_vars->pos + 1, thread_vars->left_fork_pos, thread_vars->right_fork_pos);
+	// printf("philo %d is_muted %d %d\n", thread_vars->pos + 1, phs->is_muted[thread_vars->left_fork_pos], phs->is_muted[thread_vars->right_fork_pos]);
 	if (thread_vars->left_fork_pos < thread_vars->right_fork_pos)
 	{
 		pthread_mutex_lock(phs->forks + thread_vars->left_fork_pos); // lock for changing the forks
@@ -83,6 +85,7 @@ int ph_lock_forks(t_inputs *phs, t_thread_vars *thread_vars)
 		ph_print_time(phs, thread_vars, "has taken a fork");
 	}
 	// ph_forks_mutex_change(phs, thread_vars, UNLOCK);
+	// printf("philo %d is_muted %d %d <=====================\n", thread_vars->pos + 1, phs->is_muted[thread_vars->left_fork_pos], phs->is_muted[thread_vars->right_fork_pos]);
 	return (1);
 }
 

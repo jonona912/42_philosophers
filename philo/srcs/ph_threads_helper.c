@@ -6,7 +6,7 @@
 /*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 20:46:48 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/03/20 23:53:00 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/03/21 19:50:14 by zkhojazo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,12 @@ int	check_philo_life_status(t_inputs *phs, t_thread_vars *thread_vars)
 int	philo_eat_loop(t_inputs *phs, t_thread_vars *thread_vars, long utime)
 {
 	// struct timeval	prev_time; // remove this
-	long			time_accum;
 
-	time_accum = 0;
 	if (utime < 0 || check_philo_life_status(phs, thread_vars) == -1)
 		return (-1);
 	ph_print_time(phs, thread_vars, "is eating");
 	// gettimeofday(&prev_time, NULL);
+	// printf("prev_time: %ld\n", return_time_microsec(thread_vars->prev_time, thread_vars->current_time));
 	while (utime > thread_vars->sleep_interval)
 	{
 		if (has_philosopher_died(phs))
@@ -66,13 +65,17 @@ int	philo_eat_loop(t_inputs *phs, t_thread_vars *thread_vars, long utime)
 			ph_unlock_forks(phs, thread_vars);
 			return (-1);
 		}
-		usleep(thread_vars->sleep_interval - 100);
+		usleep(thread_vars->sleep_interval);
 		gettimeofday(&thread_vars->current_time, NULL);
 		utime -= return_time_microsec(thread_vars->prev_time, thread_vars->current_time);
+		// if (return_time_microsec(thread_vars->prev_time, thread_vars->current_time) > 190000)
+		// 	printf("philo %d stuck in loop\n", thread_vars->pos + 1);
 		thread_vars->prev_time = thread_vars->current_time;
 	}
-	usleep(utime);
+	// printf("philo %d left loop utime: %ld\n", thread_vars->pos + 1, utime);
+	usleep(utime); //what if utime is negative ????
 	gettimeofday(&thread_vars->time_ate, NULL);
+	thread_vars->prev_time = thread_vars->time_ate;
 	return (0);
 }
 
@@ -95,7 +98,7 @@ int	philo_sleep_loop(t_inputs *phs, t_thread_vars *thread_vars, long utime)
 		thread_vars->prev_time = thread_vars->current_time;
 	}
 	usleep(utime);
-	thread_vars->prev_time = thread_vars->current_time;
+	// thread_vars->prev_time = thread_vars->current_time;
 	return (0);
 }
 
@@ -133,6 +136,19 @@ int	philo_sleep_loop(t_inputs *phs, t_thread_vars *thread_vars, long utime)
 // 	return (0);
 // }
 
+void print_queue(t_inputs *phs, t_thread_vars *thread_vars)
+{
+	int i = 0;
+	printf("queue: %d\n", thread_vars->pos + 1);
+	while (i < phs->n_philos)
+	{
+		printf("philo %d right:  %d\n", i + 1, phs->queue[i][0]);
+		printf("philo %d next : %d\n", i + 1, phs->queue[i][1]);
+		i++;
+	}
+	printf("\n");
+}
+
 int	philo_thinking(t_inputs *phs, t_thread_vars *thread_vars)
 {
 	int	l_fork_picked;
@@ -143,19 +159,25 @@ int	philo_thinking(t_inputs *phs, t_thread_vars *thread_vars)
 	if (check_philo_life_status(phs, thread_vars) == -1)
 		return (-1);
 	ph_print_time(phs, thread_vars, "is thinking");
+	// print_queue(phs, thread_vars);
 	while (1)
 	{
 		if (check_philo_life_status(phs, thread_vars) == -1)
-			return (-1);
+			return (printf("phil %d\n", thread_vars->pos + 1), -1);
 		gettimeofday(&thread_vars->current_time, NULL);
 		if (l_fork_picked && r_fork_picked)
 			break ;
 		ph_forks_mutex_change(phs, thread_vars, LOCK);
 		pthread_mutex_lock(&phs->queue_mutex);
-		if (thread_vars->pos == phs->queue[thread_vars->pos][0] && !phs->is_muted[thread_vars->left_fork_pos])
+		if (thread_vars->pos + 1 == phs->queue[thread_vars->pos][0] && !phs->is_muted[thread_vars->left_fork_pos])
+		{
 			l_fork_picked = 1;
-		if (thread_vars->pos == phs->queue[thread_vars->pos][0] && !phs->is_muted[thread_vars->right_fork_pos])
+			// printf("l_fork_picked set to 1 by philo %d\n", thread_vars->pos + 1);
+		}
+		if (thread_vars->pos + 1 == phs->queue[thread_vars->pos][0] && !phs->is_muted[thread_vars->right_fork_pos])
+		{
 			r_fork_picked = 1;
+		}
 		pthread_mutex_unlock(&phs->queue_mutex);
 		ph_forks_mutex_change(phs, thread_vars, UNLOCK);
 		usleep(100);
