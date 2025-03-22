@@ -6,13 +6,13 @@
 /*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:41:48 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/03/20 23:39:07 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/03/22 23:55:26 by zkhojazo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 
-void	set_philosopher_position(t_inputs *phs, t_thread_vars *thread_vars)
+void	set_philosopher_position(t_inputs *phs, t_tv *tv)
 {
 	int i = 0;
 
@@ -27,20 +27,20 @@ void	set_philosopher_position(t_inputs *phs, t_thread_vars *thread_vars)
 		i++;
 	}
 	pthread_mutex_unlock(&phs->mute_position);
-	thread_vars->pos = i;
+	tv->pos = i;
 }
 
-void	set_philosopher_forks(t_inputs *phs, t_thread_vars *thread_vars)
+void	set_philosopher_forks(t_inputs *phs, t_tv *tv)
 {
-	if (thread_vars->pos == 0)
+	if (tv->pos == 0)
 	{
-		thread_vars->left_fork_pos = phs->n_philos - 1;
-		thread_vars->right_fork_pos = thread_vars->pos;
+		tv->left_fork_pos = phs->n_philos - 1;
+		tv->right_fork_pos = tv->pos;
 	}
 	else
 	{
-		thread_vars->left_fork_pos = thread_vars->pos - 1;
-		thread_vars->right_fork_pos = thread_vars->pos;
+		tv->left_fork_pos = tv->pos - 1;
+		tv->right_fork_pos = tv->pos;
 	}
 }
 
@@ -67,23 +67,21 @@ int	ph_initialize_mutexes(t_inputs *phs)
 	return (0);
 }
 
-void	initialize_thread_vars(t_inputs *phs, t_thread_vars *thread_vars)
+void	initialize_tv(t_inputs *phs, t_tv *tv)
 {
-	memset(&thread_vars->time_thought, 0, sizeof(struct timeval));
-	memset(&thread_vars->time_ate, 0, sizeof(struct timeval));
-	memset(&thread_vars->prev_time, 0, sizeof(struct timeval));
-	memset(&thread_vars->current_time, 0, sizeof(struct timeval));
-	thread_vars->left_fork_pos = 0;
-	thread_vars->right_fork_pos = 0;
-	thread_vars->pos = 0;
-	thread_vars->i = 0;
-	thread_vars->flag = 0;
-	thread_vars->ttd_thread = phs->ttd;
-	thread_vars->tte_thread = phs->tte;
-	thread_vars->tts_thread = phs->tts;
-	thread_vars->num_eat_thread = phs->num_eat;
-	thread_vars->is_num_eat_thread = phs->is_num_eat;
-	thread_vars->sleep_interval = 9000; // 9miliseconds
+	memset(&tv->time_thought, 0, sizeof(struct timeval));
+	memset(&tv->time_ate, 0, sizeof(struct timeval));
+	memset(&tv->prev_time, 0, sizeof(struct timeval));
+	memset(&tv->current_time, 0, sizeof(struct timeval));
+	tv->left_fork_pos = 0;
+	tv->right_fork_pos = 0;
+	tv->pos = 0;
+	tv->i = 0;
+	tv->flag = 0;
+	tv->ttd_thread = phs->ttd;
+	tv->tte_thread = phs->tte;
+	tv->tts_thread = phs->tts;
+	tv->num_eat_thread = phs->num_eat;
+	tv->is_num_eat_thread = phs->is_num_eat;
+	tv->sleep_interval = 9000;
 }
-
-

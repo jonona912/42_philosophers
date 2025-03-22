@@ -6,7 +6,7 @@
 /*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:55:53 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/03/19 17:50:26 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/03/22 23:23:19 by zkhojazo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,12 @@ void	*philosopher_activity(void *arg);
 int main(int argc, char **argv)
 {
 	t_inputs	crit;
-	pthread_t *philos;
+	pthread_t	*philos;
 
 	if (ph_check_user_input(argc, argv) == -1)
 		return (1);
-	ph_set_user_inputs(&crit, argv); // return error if malloc fails
+	if (ph_set_user_inputs(&crit, argv) == -1)
+		return (printf("Memory allocation failed\n"), -1);
 	philos = (pthread_t *)malloc(sizeof(pthread_t) * crit.n_philos);
 	if (ph_initialize_mutexes(&crit) == -1)
 		return (printf("Mutex init failed\n"), 1);
@@ -33,11 +34,6 @@ int main(int argc, char **argv)
 	free(philos);
 	return (0);
 }
-
-
-
-
-
 
 void	print_crits(t_inputs crit)
 {

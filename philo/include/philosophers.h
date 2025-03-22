@@ -6,7 +6,7 @@
 /*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:52:25 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/03/20 23:39:07 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/03/22 23:55:26 by zkhojazo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct s_inputs
 	struct timeval	init_time;
 }	t_inputs;
 
-typedef struct s_thread_vars
+typedef struct s_tv
 {
 	struct timeval	time_thought;
 	struct timeval	time_ate;
@@ -66,7 +66,7 @@ typedef struct s_thread_vars
 	int				num_eat_thread;
 	int				is_num_eat_thread;
 	long			sleep_interval;
-}	t_thread_vars;
+}	t_tv;
 
 typedef enum s_lock_status
 {
@@ -96,17 +96,17 @@ void	ph_destroy_mutexes_and_free_queue(t_inputs *phs);
 void	ph_free_memory(t_inputs *phs);
 
 // ph_one_philosopher.c
-void	one_philo_thinking(t_inputs *phs, t_thread_vars *thread_vars, long time_to_think);
+void	one_philo_thinking(t_inputs *phs, t_tv *tv, long time_to_think);
 void	*philosopher_activity(void *arg);
 
 // ph_prints.c
-void	ph_print_time(t_inputs *phs, t_thread_vars *thread_vars, char *str);
+void	ph_print_time(t_inputs *phs, t_tv *tv, char *str);
 
 // ph_set_philo_param.c
-void	set_philosopher_position(t_inputs *phs, t_thread_vars *thread_vars);
-void	set_philosopher_forks(t_inputs *phs, t_thread_vars *thread_vars);
+void	set_philosopher_position(t_inputs *phs, t_tv *tv);
+void	set_philosopher_forks(t_inputs *phs, t_tv *tv);
 int	ph_initialize_mutexes(t_inputs *phs);
-void	initialize_thread_vars(t_inputs *phs, t_thread_vars *thread_vars);
+void	initialize_tv(t_inputs *phs, t_tv *tv);
 
 // ph_set_user_input.c
 int	ph_isspace(char c);
@@ -114,34 +114,40 @@ int	ph_atoi(const char *nptr);
 int	ph_set_user_inputs(t_inputs *crit, char **argv);
 
 // ph_queues.c
-int	ph_set_queue(t_inputs *phs, int pos);
-void	ph_remove_first_queue(t_inputs *phs, t_thread_vars *thread_vars);
+int	ph_set_queue(t_inputs *phs, int pos, t_tv *tv);
+int	ph_set_queue_2(t_inputs *phs, t_tv *tv);
+void	ph_remove_first_queue(t_inputs *phs, t_tv *tv);
 
 // ph_threads_1.c
 int create_and_join_threads(pthread_t *philos, t_inputs *crit);
-// void	wait_for_forks(t_inputs *phs, t_thread_vars *thread_vars);
-// void	lock_forks(t_inputs *phs, t_thread_vars *thread_vars, t_lock_status status);
+// void	wait_for_forks(t_inputs *phs, t_tv *tv);
+// void	lock_forks(t_inputs *phs, t_tv *tv, t_lock_status status);
 
 // ph_threads_2.c
-void	set_philosopher_forks(t_inputs *phs, t_thread_vars *thread_vars);
-int		philo_thinking(t_inputs *phs, t_thread_vars *thread_vars);
+void	set_philosopher_forks(t_inputs *phs, t_tv *tv);
+int		philo_thinking(t_inputs *phs, t_tv *tv);
 void	*more_than_one_philo(void *arg);
-int	pick_a_fork(t_inputs *phs, t_thread_vars *thread_vars, int fork_pos);
+int	pick_a_fork(t_inputs *phs, t_tv *tv, int fork_pos);
 
 // ph_threads_helper.c
-// int	ph_unlock_forks(t_inputs *phs, t_thread_vars *thread_vars);
-int	philo_eat_loop(t_inputs *phs, t_thread_vars *thread_vars, long utime);
-int	philo_sleep_loop(t_inputs *phs, t_thread_vars *thread_vars, long utime);
-int	philo_thinking(t_inputs *phs, t_thread_vars *thread_vars);
+// int	ph_unlock_forks(t_inputs *phs, t_tv *tv);
+int	philo_eat_loop(t_inputs *phs, t_tv *tv, long utime);
+int	philo_sleep_loop(t_inputs *phs, t_tv *tv, long utime);
+int	philo_thinking(t_inputs *phs, t_tv *tv);
 
 // ph_threads_helper_2.c
-int ph_forks_mutex_change(t_inputs *phs, t_thread_vars *thread_vars, t_lock_status status);
-int ph_lock_forks(t_inputs *phs, t_thread_vars *thread_vars);
-int	ph_unlock_forks(t_inputs *phs, t_thread_vars *thread_vars);
+int ph_forks_mutex_change(t_inputs *phs, t_tv *tv, t_lock_status status);
+int ph_lock_forks(t_inputs *phs, t_tv *tv);
+int	ph_unlock_forks(t_inputs *phs, t_tv *tv);
 
 // ph_time_calc.c
 long	return_time_microsec(struct timeval start, struct timeval end);
 // int	is_time_less_than(struct timeval prev_time, long time, long interval);
 long	time_remaining_microsecond(struct timeval prev_time, long time);
+
+// philo_life_status.c
+int	has_philosopher_died(t_inputs *phs);
+int	is_philo_dead_of_hunger(t_inputs *phs, t_tv *tv);
+int	check_philo_life_status(t_inputs *phs, t_tv *tv);
 
 #endif

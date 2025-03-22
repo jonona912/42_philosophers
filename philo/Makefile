@@ -6,7 +6,7 @@
 #    By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/26 21:51:36 by zkhojazo          #+#    #+#              #
-#    Updated: 2025/03/20 17:02:06 by zkhojazo         ###   ########.fr        #
+#    Updated: 2025/03/22 23:53:29 by zkhojazo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,8 @@ SRCS = main_philosophers.c \
 		ph_threads_2.c \
 		ph_threads_helper.c \
 		ph_threads_helper_2.c \
-		ph_time_calc.c
+		ph_time_calc.c \
+		philo_life_status.c
 
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 
