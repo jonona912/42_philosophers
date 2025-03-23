@@ -6,17 +6,11 @@
 /*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:58:48 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/03/02 16:44:46 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/03/23 13:18:03 by zkhojazo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
-
-// number_of_philosophers 
-// time_to_die 
-// time_to_eat
-// time_to_sleep
-// [number_of_times_each_philosopher_must_eat]
 
 int	ph_isdigit(int c)
 {
@@ -41,15 +35,9 @@ int	is_non_zero_num(char *str)
 	return (non_zero_digit);
 }
 
-// check number of user inputs
-	// if error (print error and return -1)
-// check if inputs are positive nums
-	// if error (print error and return -1)
-// if success return (0);
-
 int	ph_check_user_input(int argc, char **argv)
 {
-	int i;
+	int	i;
 
 	if (argc < 5)
 	{

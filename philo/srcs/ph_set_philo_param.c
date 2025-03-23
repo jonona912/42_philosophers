@@ -6,7 +6,7 @@
 /*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:41:48 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/03/22 23:55:26 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/03/23 13:10:37 by zkhojazo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,16 @@
 
 void	set_philosopher_position(t_inputs *phs, t_tv *tv)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	pthread_mutex_lock(&phs->mute_position);
 	while (i < phs->n_philos)
 	{
 		if (!*(phs->ph_pos + i))
 		{
 			*(phs->ph_pos + i) = 1;
-			break;
+			break ;
 		}
 		i++;
 	}
@@ -46,8 +47,9 @@ void	set_philosopher_forks(t_inputs *phs, t_tv *tv)
 
 int	ph_initialize_mutexes(t_inputs *phs)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	while (i < phs->n_philos)
 	{
 		if (pthread_mutex_init(phs->forks + i, NULL) != 0)

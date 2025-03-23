@@ -6,45 +6,11 @@
 /*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 20:46:48 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/03/22 23:55:26 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/03/23 12:30:49 by zkhojazo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
-
-// int	has_philosopher_died(t_inputs *phs)
-// {
-// 	int	is_dead;
-
-// 	is_dead = 0;
-// 	pthread_mutex_lock(&phs->death);
-// 	is_dead = phs->is_dead;
-// 	pthread_mutex_unlock(&phs->death);
-// 	return (is_dead);
-// }
-
-// int	is_philo_dead_of_hunger(t_inputs *phs, t_tv *tv)
-// {
-// 	gettimeofday(&tv->current_time, NULL);
-// 	if ((return_time_microsec(tv->time_ate, tv->current_time)) > tv->ttd_thread)
-// 	{
-// 		pthread_mutex_lock(&phs->death);
-// 		phs->is_dead = 1;
-// 		pthread_mutex_unlock(&phs->death);
-// 		ph_print_time(phs, tv, "died");
-// 		return (1);
-// 	}
-// 	return (0);
-// }
-
-// int	check_philo_life_status(t_inputs *phs, t_tv *tv)
-// {
-// 	if (has_philosopher_died(phs))
-// 		return (-1);
-// 	if (is_philo_dead_of_hunger(phs, tv))
-// 		return (-1);
-// 	return (0);
-// }
 
 int	philo_eat_loop(t_inputs *phs, t_tv *tv, long utime)
 {
@@ -74,12 +40,27 @@ int	philo_sleep_loop(t_inputs *phs, t_tv *tv, long utime)
 	ph_print_time(phs, tv, "is sleeping");
 	while (return_time_microsec(tv->prev_time, tv->current_time) + 50 < utime)
 	{
-		usleep(10);
-		gettimeofday(&tv->current_time, NULL);
 		if (check_philo_life_status(phs, tv) == -1)
 			return (-1);
+		usleep(10);
+		gettimeofday(&tv->current_time, NULL);
 	}
 	return (0);
+}
+
+int	philo_thinking_helper(t_inputs *phs, t_tv *tv, int *l_fp, int *r_fp)
+{
+	lock_forks_mutex(phs, tv);
+	pthread_mutex_lock(&phs->queue_mutex);
+	if (*l_fp == 0 && tv->pos + 1 == phs->queue[tv->left_fork_pos][0]
+		&& !phs->is_muted[tv->left_fork_pos])
+		*l_fp = 1;
+	if (*r_fp == 0 && tv->pos + 1 == phs->queue[tv->right_fork_pos][0]
+		&& !phs->is_muted[tv->right_fork_pos])
+		*r_fp = 1;
+	pthread_mutex_unlock(&phs->queue_mutex);
+	unlock_forks_mutex(phs, tv);
+	return (1);
 }
 
 int	philo_thinking(t_inputs *phs, t_tv *tv)
@@ -94,20 +75,13 @@ int	philo_thinking(t_inputs *phs, t_tv *tv)
 	ph_print_time(phs, tv, "is thinking");
 	while (1)
 	{
-		ph_forks_mutex_change(phs, tv, LOCK);
-		pthread_mutex_lock(&phs->queue_mutex);
-		if (l_fork_picked == 0 && tv->pos + 1 == phs->queue[tv->left_fork_pos][0] && !phs->is_muted[tv->left_fork_pos])
-			l_fork_picked = 1;
-		if (r_fork_picked == 0 && tv->pos + 1 == phs->queue[tv->right_fork_pos][0] && !phs->is_muted[tv->right_fork_pos])
-			r_fork_picked = 1;
-		pthread_mutex_unlock(&phs->queue_mutex);
-		ph_forks_mutex_change(phs, tv, UNLOCK);
+		philo_thinking_helper(phs, tv, &l_fork_picked, &r_fork_picked);
 		if (l_fork_picked && r_fork_picked)
 			break ;
 		if (check_philo_life_status(phs, tv) == -1)
 			return (-1);
 		usleep(50);
-		gettimeofday(&tv->prev_time, NULL);
 	}
+	gettimeofday(&tv->prev_time, NULL);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 14:27:44 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/03/20 11:49:31 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/03/23 13:05:01 by zkhojazo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ph_free_double_arr(int ***arr, int len)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < len)
@@ -35,7 +35,7 @@ void	ph_free_double_arr(int ***arr, int len)
 
 void	ph_destroy_mutexes(t_inputs *phs)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < phs->n_philos)

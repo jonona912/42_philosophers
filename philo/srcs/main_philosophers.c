@@ -6,16 +6,15 @@
 /*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:55:53 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/03/22 23:23:19 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/03/23 13:30:28 by zkhojazo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 
 void	print_crits(t_inputs crit);
-void	*philosopher_activity(void *arg);
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_inputs	crit;
 	pthread_t	*philos;

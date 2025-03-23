@@ -6,7 +6,7 @@
 /*   By: zkhojazo <zkhojazo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:09:14 by zkhojazo          #+#    #+#             */
-/*   Updated: 2025/03/22 23:55:26 by zkhojazo         ###   ########.fr       */
+/*   Updated: 2025/03/23 12:37:48 by zkhojazo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	ph_set_queue(t_inputs *phs, int pos, t_tv *tv)
 		if (phs->queue[pos][i] == 0)
 		{
 			*(*(phs->queue + pos) + i) = tv->pos + 1;
-			break;
+			break ;
 		}
 		i++;
 	}
