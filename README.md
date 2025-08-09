@@ -1,6 +1,3 @@
-# 42_philosophers
-Philosophers - Project at 42 school (42 Wolfsburg)
-
 <h1 align="center">
 	🍝 Philosophers
 </h1>
